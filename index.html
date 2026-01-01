@@ -349,34 +349,68 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-                                <div class="aspect-[4/3] overflow-hidden">
-                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/s_1_png.jpg?cb=1747925458" class="w-full h-full object-contain bg-[#111] transition-transform duration-500 group-hover:scale-105" alt="Profile">
-                                </div>
-                                <div class="bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">QSO卡片1</div>
-                            </div>
-                            <div class="group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-                                <div class="aspect-[4/3] overflow-hidden">
-                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/QQ20250522_231935_png.jpg?cb=1747927614" class="w-full h-full object-contain bg-[#111] transition-transform duration-500 group-hover:scale-105" alt="FAST">
-                                </div>
-                                <div class="bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">24年7月贵州省平塘县 FAST基地>ping'
-                            </div>
-                            <div class="group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-                                <div class="aspect-[4/3] overflow-hidden">
-                                    <img src="./qsocard.png" class="w-full h-full object-contain bg-[#111] transition-transform duration-500 group-hover:scale-105" alt="Field Op">
-                                </div>
-                                <div class="bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">QSO卡片2</div>
-                            </div>
-                            <div class="group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-                                <div class="aspect-[4/3] overflow-hidden">
-                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/2c717ab58e93d0a77b466d2f56325b5.jpg?cb=1746781704" class="w-full h-full object-contain bg-[#111] transition-transform duration-500 group-hover:scale-105" alt="Friends">
-                                </div>
-                                <div class="bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">23年7月与朋友游玩归德</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- 外层网格容器：响应式2列布局，核心样式统一 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- QSO卡片组件：复用统一的card-item样式，仅修改内容 -->
+    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+        <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://cdn-bio.qrz.com/n/bh8qvn/s_1_png.jpg?cb=1747925458" 
+                 class="card-img w-full h-full object-contain bg-[#111]" 
+                 alt="Profile">
+        </div>
+        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+            QSO卡片1
+        </div>
+    </div>
+
+    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+        <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://cdn-bio.qrz.com/n/bh8qvn/QQ20250522_231935_png.jpg?cb=1747927614" 
+                 class="card-img w-full h-full object-contain bg-[#111]" 
+                 alt="FAST">
+        </div>
+        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+            24年7月贵州省平塘县 FAST基地
+        </div>
+    </div>
+
+    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+        <div class="aspect-[4/3] overflow-hidden">
+            <img src="./qsocard.png" 
+                 class="card-img w-full h-full object-contain bg-[#111]" 
+                 alt="Field Op">
+        </div>
+        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+            QSO卡片2
+        </div>
+    </div>
+
+    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+        <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://cdn-bio.qrz.com/n/bh8qvn/2c717ab58e93d0a77b466d2f56325b5.jpg?cb=1746781704" 
+                 class="card-img w-full h-full object-contain bg-[#111]" 
+                 alt="Friends">
+        </div>
+        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+            23年7月与朋友游玩归德
+        </div>
+    </div>
+</div>
+
+<!-- 统一样式：抽离所有重复的行内样式，全局生效 -->
+<style>
+    /* 图片hover缩放动效：统一控制，修改时仅需改此处 */
+    .card-img {
+        transition: transform 500ms ease-in-out;
+    }
+    .group:hover .card-img {
+        transform: scale(1.05);
+    }
+    /* 可选：优化卡片hover过渡流畅度（原代码基础上升级） */
+    .card-item {
+        transition: border-color 300ms ease;
+    }
+</style>
 
                 <div id="tab3" class="tab-content hidden animate-fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -668,6 +702,7 @@
     </script>
 </body>
 </html>
+
 
 
 
