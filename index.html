@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BH8QVN | 通联中心</title>
+    <title>BH8QVN | 通联中心 | Radio Command Unit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -21,19 +22,24 @@
                         'cmd-alert': '#ef4444', // 警告色：红
                     },
                     fontFamily: {
-                        'head': ['Orbitron', 'sans-serif'],
-                        'body': ['Roboto', 'sans-serif'],
-                        'data': ['JetBrains Mono', 'monospace'],
+                        'head': ['Orbitron', 'sans-serif'],     // 标题字体
+                        'body': ['Roboto', 'sans-serif'],       // 正文字体
+                        'data': ['JetBrains Mono', 'monospace'],// 数据字体
                     },
                     animation: {
-                        'radar-spin': 'spin 4s linear infinite', // 雷达扫描动画
-                        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite', // 缓慢扩散动画
-                        'breathe': 'breathe 3s ease-in-out infinite', // 呼吸灯动画
+                        'radar-spin': 'spin 4s linear infinite', // 雷达扫描
+                        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite', // 缓慢波纹
+                        'breathe': 'breathe 3s ease-in-out infinite', // 呼吸灯
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',   // 淡入动画
                     },
                     keyframes: {
                         breathe: {
                             '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(56, 189, 248, 0.4)' },
                             '50%': { transform: 'scale(1.05)', boxShadow: '0 0 20px 5px rgba(56, 189, 248, 0.2)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -43,13 +49,15 @@
 
     <style type="text/tailwindcss">
         @layer utilities {
+            /* 玻璃拟态面板通用样式 */
             .glass-panel {
                 @apply bg-cmd-panel/80 backdrop-blur-md border border-cmd-border shadow-xl;
             }
+            /* 数据文本通用样式 */
             .text-data {
                 @apply font-data text-xs tracking-wider;
             }
-            /* 地图网格背景 */
+            /* 地图网格背景图 */
             .map-grid {
                 background-image: 
                     linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
@@ -61,12 +69,16 @@
                 background: conic-gradient(from 0deg, transparent 0deg, rgba(56, 189, 248, 0.1) 60deg, rgba(56, 189, 248, 0.5) 360deg);
                 border-radius: 50%;
             }
+            /* 图片 Hover 放大效果 */
+            .card-img {
+                transition: transform 500ms ease-in-out;
+            }
         }
     </style>
 </head>
 <body class="bg-cmd-bg text-gray-300 font-body min-h-screen flex flex-col selection:bg-cmd-blue selection:text-white overflow-x-hidden">
 
-    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full -z-10 opacity-80"></canvas>
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full -z-10 opacity-60 pointer-events-none"></canvas>
 
     <header class="fixed top-0 w-full z-50 glass-panel border-b border-cmd-blue/30 h-20 md:h-24 transition-all duration-300">
         <div class="container mx-auto px-4 h-full flex justify-between items-center">
@@ -93,7 +105,7 @@
                 </div>
             </div>
 
-            <button id="langToggle" class="px-4 py-2 border border-cmd-border bg-black/30 rounded hover:border-cmd-blue hover:bg-cmd-blue/10 text-sm font-data text-gray-300 hover:text-white transition-all flex items-center gap-2 group">
+            <button id="langToggle" onclick="toggleLanguage()" class="px-4 py-2 border border-cmd-border bg-black/30 rounded hover:border-cmd-blue hover:bg-cmd-blue/10 text-sm font-data text-gray-300 hover:text-white transition-all flex items-center gap-2 group cursor-pointer">
                 <i class="fa fa-globe group-hover:rotate-180 transition-transform duration-500"></i>
                 <span class="current-lang">中文 / EN</span>
             </button>
@@ -116,7 +128,7 @@
                 
                 <div class="flex items-center gap-5 mb-6 relative z-10">
                     <div class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-cmd-blue shadow-[0_0_20px_rgba(56,189,248,0.4)] bg-black">
-                        <img src="./zp.png">
+                        <img src="./zp.png" onerror="this.src='https://via.placeholder.com/150/000000/38bdf8?text=NO+IMG'" alt="Avatar" class="w-full h-full object-cover">
                     </div>
 
                     <div>
@@ -332,7 +344,7 @@
                 </div>
 
                 <div id="tab2" class="tab-content hidden animate-fade-in">
-                    <div class="max-w-4xl mx-auto">
+                    <div class="max-w-5xl mx-auto">
                         <h3 class="font-head text-3xl text-white mb-8 text-center">
                             <span class="lang-cn">频率背后的故事</span>
                             <span class="lang-en hidden">BEHIND THE FREQUENCY</span>
@@ -345,72 +357,46 @@
                             </div>
                             <div class="lang-en hidden space-y-4">
                                 <p>It began with static. Before smartphones ruled the world, I used a household satellite dish as a makeshift antenna. Crude, yes, but effective. The faint broadcasts seeping through the noise were like laser beams piercing the silence of my childhood.</p>
-                                <p>Now, licensed and online, I connect to the global network. When a stranger's voice cuts through the static from thousands of kilometers away, it's more than electromagnetic waves—it's a momentary connection of souls across the void. The vast world folds into a receiver. That one-in-a-million chance of being on the same frequency is the cyberpunk definition of "A bosom friend afar brings a distant land near."</p>
+                                <p>Now, licensed and online, I connect to the global network. When a stranger's voice cuts through the static from thousands of kilometers away, it's more than electromagnetic waves—it's a momentary connection of souls across the void.</p>
                             </div>
                         </div>
 
-            <!-- 外层网格容器：响应式2列布局，核心样式统一 -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- QSO卡片组件：复用统一的card-item样式，仅修改内容 -->
-    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-        <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://cdn-bio.qrz.com/n/bh8qvn/s_1_png.jpg?cb=1747925458" 
-                 class="card-img w-full h-full object-contain bg-[#111]" 
-                 alt="Profile">
-        </div>
-        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
-            QSO卡片1
-        </div>
-    </div>
-
-    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-        <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://cdn-bio.qrz.com/n/bh8qvn/QQ20250522_231935_png.jpg?cb=1747927614" 
-                 class="card-img w-full h-full object-contain bg-[#111]" 
-                 alt="FAST">
-        </div>
-        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
-            24年7月贵州省平塘县 FAST基地
-        </div>
-    </div>
-
-    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-        <div class="aspect-[4/3] overflow-hidden">
-            <img src="./qsocard.png" 
-                 class="card-img w-full h-full object-contain bg-[#111]" 
-                 alt="Field Op">
-        </div>
-        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
-            QSO卡片2
-        </div>
-    </div>
-
-    <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
-        <div class="aspect-[4/3] overflow-hidden">
-            <img src="https://cdn-bio.qrz.com/n/bh8qvn/2c717ab58e93d0a77b466d2f56325b5.jpg?cb=1746781704" 
-                 class="card-img w-full h-full object-contain bg-[#111]" 
-                 alt="Friends">
-        </div>
-        <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
-            23年7月与朋友游玩归德
-        </div>
-    </div>
-</div>
-
-<!-- 统一样式：抽离所有重复的行内样式，全局生效 -->
-<style>
-    /* 图片hover缩放动效：统一控制，修改时仅需改此处 */
-    .card-img {
-        transition: transform 500ms ease-in-out;
-    }
-    .group:hover .card-img {
-        transform: scale(1.05);
-    }
-    /* 可选：优化卡片hover过渡流畅度（原代码基础上升级） */
-    .card-item {
-        transition: border-color 300ms ease;
-    }
-</style>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+                                <div class="aspect-[4/3] overflow-hidden">
+                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/s_1_png.jpg?cb=1747925458" class="card-img w-full h-full object-contain bg-[#111]" alt="QSO Card 1">
+                                </div>
+                                <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+                                    QSO 卡片展示 1
+                                </div>
+                            </div>
+                            <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+                                <div class="aspect-[4/3] overflow-hidden">
+                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/QQ20250522_231935_png.jpg?cb=1747927614" class="card-img w-full h-full object-contain bg-[#111]" alt="FAST Telescope">
+                                </div>
+                                <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+                                    24年7月 贵州平塘 FAST 基地
+                                </div>
+                            </div>
+                            <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+                                <div class="aspect-[4/3] overflow-hidden">
+                                    <img src="./qsocard.png" onerror="this.src='https://via.placeholder.com/600x400/111/38bdf8?text=QSO+CARD'" class="card-img w-full h-full object-contain bg-[#111]" alt="Field Op">
+                                </div>
+                                <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+                                    QSO 卡片展示 2
+                                </div>
+                            </div>
+                            <div class="card-item group relative bg-black border border-cmd-border rounded-lg overflow-hidden hover:border-cmd-blue transition-colors">
+                                <div class="aspect-[4/3] overflow-hidden">
+                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/2c717ab58e93d0a77b466d2f56325b5.jpg?cb=1746781704" class="card-img w-full h-full object-contain bg-[#111]" alt="With Friends">
+                                </div>
+                                <div class="card-desc bg-black/80 p-3 text-center text-xs text-cmd-blue font-data border-t border-cmd-border">
+                                    23年7月 与朋友游玩归德
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div id="tab3" class="tab-content hidden animate-fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -484,26 +470,25 @@
                 <div id="tab4" class="tab-content hidden animate-fade-in">
                     <div class="flex flex-col items-center justify-center py-10">
                         <div class="w-full max-w-3xl relative group">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-cmd-blue to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                            <div class="absolute -inset-1 bg-gradient-to-r from-cmd-blue to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 z-0"></div>
                             
-                            <a href="https://www.douyin.com/user/MS4wLjABAAAAw5mKNdIum9JVGF1nKtKrWYJsXdJDoCaMr8qW8qWP1BHta4kH_PVlDy0wctW31ix2" target="_blank" class="relative block bg-black border border-cmd-border rounded-lg overflow-hidden">
-                                <div class="relative aspect-video">
-                                    <img src="https://cdn-bio.qrz.com/n/bh8qvn/s.jpg?cb=1748687248" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" alt="Video Cover">
-                                    
-                                    <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                                        <div class="w-20 h-20 bg-cmd-alert/90 rounded-full flex items-center justify-center shadow-[0_0_30px_#ef4444] group-hover:scale-110 transition-transform">
-                                            <i class="fa fa-play text-3xl text-white ml-2"></i>
-                                        </div>
+                            <a href="https://www.douyin.com/user/MS4wLjABAAAAw5mKNdIum9JVGF1nKtKrWYJsXdJDoCaMr8qW8qWP1BHta4kH_PVlDy0wctW31ix2" target="_blank" class="relative block glass-panel rounded-lg overflow-hidden text-center group/card z-10">
+                                
+                                <div class="absolute inset-0 bg-cover bg-center z-0 transition-transform duration-700 group-hover/card:scale-110" style="background-image: url('https://www.qrz.com/hampages/bh8qvn/s.jpg');"></div>
+                                <div class="absolute inset-0 bg-black/70 z-10 transition-colors group-hover/card:bg-black/50"></div>
+
+                                <div class="relative z-20 p-8">
+                                    <div class="w-20 h-20 mx-auto bg-black/50 backdrop-blur rounded-full flex items-center justify-center border border-gray-500 mb-4 group-hover/card:border-white transition-colors">
+                                        <i class="fa fa-music text-3xl text-white animate-pulse"></i>
                                     </div>
-                                    <div class="absolute top-4 left-4 bg-black/60 backdrop-blur px-3 py-1 rounded border-l-2 border-cmd-alert">
-                                        <span class="text-xs font-data text-white animate-pulse">● LIVE RECORDING</span>
-                                    </div>
-                                </div>
-                                <div class="p-6 bg-cmd-panel border-t border-cmd-border">
-                                    <h3 class="text-xl font-head text-white mb-2">BH8QVN 的科普记录</h3>
-                                    <p class="text-gray-400 text-sm">2024年7月于贵州省平塘县克度镇进行无线电科普活动</p>
-                                    <div class="mt-4 flex items-center text-cmd-blue text-sm font-bold tracking-wider group-hover:translate-x-2 transition-transform">
-                                        ACCESS VIDEO DATABASE <i class="fa fa-arrow-right ml-2"></i>
+                                    <h3 class="font-head text-2xl text-white mb-2 drop-shadow-lg">
+                                        <span class="lang-cn">关注抖音频道</span>
+                                        <span class="lang-en hidden">Follow on Douyin/TikTok</span>
+                                    </h3>
+                                    <p class="text-gray-300 font-data text-sm mb-6 drop-shadow">ID: ChunmuYang</p>
+                                    <div class="inline-block px-6 py-2 border border-cmd-blue text-cmd-blue bg-black/30 backdrop-blur rounded hover:bg-cmd-blue hover:text-white transition-all font-head text-sm tracking-wider uppercase">
+                                        <span class="lang-cn">点击观看视频</span>
+                                        <span class="lang-en hidden">Watch Videos</span>
                                     </div>
                                 </div>
                             </a>
@@ -515,199 +500,101 @@
         </div>
     </main>
 
-    <footer id="footer-nav" class="bg-[#0b1120] border-t border-cmd-border pt-10 pb-6 z-10 mt-auto relative">
-         <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cmd-blue/50 to-transparent"></div>
-         
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <button onclick="switchTab('tab1'); scrollToTab()" class="text-left p-4 rounded hover:bg-cmd-panel transition-colors border border-transparent hover:border-cmd-border group cursor-pointer">
-                    <i class="fa fa-envelope-o text-cmd-blue mb-2 text-xl group-hover:scale-110 transform transition-transform block"></i>
-                    <span class="text-sm font-head text-gray-300 group-hover:text-white">QSL Exchange</span>
-                </button>
-                <button onclick="switchTab('tab2'); scrollToTab()" class="text-left p-4 rounded hover:bg-cmd-panel transition-colors border border-transparent hover:border-cmd-border group cursor-pointer">
-                    <i class="fa fa-user text-cmd-gold mb-2 text-xl group-hover:scale-110 transform transition-transform block"></i>
-                    <span class="text-sm font-head text-gray-300 group-hover:text-white">Origin Story</span>
-                </button>
-                <button onclick="switchTab('tab3'); scrollToTab()" class="text-left p-4 rounded hover:bg-cmd-panel transition-colors border border-transparent hover:border-cmd-border group cursor-pointer">
-                    <i class="fa fa-cogs text-green-500 mb-2 text-xl group-hover:scale-110 transform transition-transform block"></i>
-                    <span class="text-sm font-head text-gray-300 group-hover:text-white">Equipment</span>
-                </button>
-                <button onclick="switchTab('tab4'); scrollToTab()" class="text-left p-4 rounded hover:bg-cmd-panel transition-colors border border-transparent hover:border-cmd-border group cursor-pointer">
-                    <i class="fa fa-video-camera text-purple-500 mb-2 text-xl group-hover:scale-110 transform transition-transform block"></i>
-                    <span class="text-sm font-head text-gray-300 group-hover:text-white">Video Logs</span>
-                </button>
-            </div>
-
-            <div class="border-t border-cmd-border pt-6 flex flex-col md:flex-row justify-between items-center text-xs font-data text-gray-500">
-                <div class="mb-4 md:mb-0">
-                    &copy; 2025 BH8QVN. SYSTEM ONLINE.<br>
-                    DESIGNED FOR THE FREQUENCY.
-                </div>
-                <div class="flex space-x-6 text-lg">
-                    <a href="mailto:ChunmuYang@163.com" class="hover:text-cmd-blue transition-colors"><i class="fa fa-envelope"></i></a>
-                    <a href="https://www.qrz.com/db/BH8QVN" target="_blank" class="hover:text-white transition-colors"><i class="fa fa-globe"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // --- 核心逻辑脚本 ---
-
-        // 1. 标签页切换功能 (修复版)
-        // 参数 tabId: 要显示的 div 的 id (例如 'tab1', 'tab2')
-        window.switchTab = function(tabId) {
-            console.log("Switching to: " + tabId); // 调试日志
-
-            // 第一步：隐藏所有内容区域 (.tab-content)
-            var contents = document.querySelectorAll('.tab-content');
-            contents.forEach(function(el) {
-                el.classList.add('hidden'); // 添加 hidden 类来隐藏
-            });
-
-            // 第二步：显示目标内容区域
-            var targetContent = document.getElementById(tabId);
-            if (targetContent) {
-                targetContent.classList.remove('hidden'); // 移除 hidden 类来显示
-            }
-
-            // 第三步：更新顶部按钮的激活状态样式
-            var buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(function(btn) {
-                // 如果按钮的 data-target 属性等于当前的 tabId
-                if(btn.dataset.target === tabId) {
-                    btn.classList.add('active', 'text-white'); // 激活样式
-                    btn.classList.remove('text-gray-500');
-                } else {
-                    btn.classList.remove('active', 'text-white'); // 非激活样式
-                    btn.classList.add('text-gray-500');
-                }
-            });
-        }
-
-        // 2. 滚动辅助函数 (新增)
-        // 当点击页脚按钮时，页面平滑滚动到选项卡顶部，确保用户看到内容变化
-        window.scrollToTab = function() {
-            var container = document.getElementById('tab-container');
-            if (container) {
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-        
-        // 页面加载默认显示 Tab 1
-        switchTab('tab1');
-
-        // 3. 双时钟逻辑 (UTC + CST 强制指定)
-        function updateTime() {
+        // --- 1. 时钟功能 ---
+        function updateClock() {
             const now = new Date();
-            
-            // 获取 UTC 时间字符串
-            const utcString = now.toISOString().substring(11, 19);
-            document.getElementById('utc-clock').innerText = utcString;
-            document.getElementById('utc-clock-m').innerText = utcString;
+            const utcString = now.toISOString().substr(11, 8);
+            const localString = now.toLocaleTimeString('en-GB', { hour12: false });
+            const shortLocal = localString.substr(0, 5);
+            const utcHours = now.getUTCHours().toString().padStart(2, '0');
+            const utcMinutes = now.getUTCMinutes().toString().padStart(2, '0');
+            const shortUtc = `${utcHours}:${utcMinutes}`;
 
-            // 获取 中国标准时间 (Asia/Shanghai)，强制使用该时区，不依赖用户本地设置
-            const options = { timeZone: 'Asia/Shanghai', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            // 使用 try-catch 防止旧浏览器不支持时区API报错
-            try {
-                const cstString = now.toLocaleTimeString('en-US', options);
-                document.getElementById('local-clock').innerText = cstString;
-                document.getElementById('local-clock-m').innerText = cstString;
-            } catch (e) {
-                // 如果不支持，降级显示（极少情况）
-                document.getElementById('local-clock').innerText = "SYSTEM ERR";
+            document.getElementById('utc-clock').innerText = utcString;
+            document.getElementById('local-clock').innerText = localString;
+            
+            if(document.getElementById('utc-clock-m')) {
+                document.getElementById('utc-clock-m').innerText = shortUtc;
+                document.getElementById('local-clock-m').innerText = shortLocal;
             }
         }
-        // 每秒更新一次
-        setInterval(updateTime, 1000);
-        updateTime(); // 立即运行一次
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        // 4. 中英文切换逻辑
-        const langToggleBtn = document.getElementById('langToggle');
-        let currentLang = 'cn';
+        // --- 2. Tab 切换功能 ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-white');
+                btn.classList.add('text-gray-500');
+            });
 
-        langToggleBtn.addEventListener('click', () => {
-            currentLang = currentLang === 'cn' ? 'en' : 'cn';
+            document.getElementById(tabId).classList.remove('hidden');
             
-            document.querySelectorAll('.lang-cn').forEach(el => el.classList.toggle('hidden', currentLang === 'en'));
-            document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', currentLang === 'cn'));
-            
-            document.querySelector('.current-lang').innerText = currentLang === 'cn' ? '中文 / EN' : 'EN / 中文';
-        });
+            const activeBtn = document.querySelector(`button[data-target="${tabId}"]`);
+            if(activeBtn) {
+                activeBtn.classList.add('active', 'text-white');
+                activeBtn.classList.remove('text-gray-500');
+            }
+        }
 
-        // 5. 背景粒子网络动画 (实线增强版)
+        // --- 3. 语言切换功能 ---
+        let isEnglish = false;
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            
+            if (isEnglish) {
+                document.querySelectorAll('.lang-cn').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+            } else {
+                document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.lang-cn').forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        // --- 4. 背景 Canvas 星空动画 ---
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
-        let particles = [];
+        const stars = [];
 
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         }
-        
-        window.addEventListener('resize', resize);
-        resize();
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.3; 
-                this.vy = (Math.random() - 0.5) * 0.3;
-                this.size = Math.random() * 2 + 1;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(148, 163, 184, 0.7)'; // 粒子更清晰
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+        function initStars() {
+            for(let i = 0; i < 100; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5
+                });
             }
         }
-
-        // 粒子数量
-        for (let i = 0; i < 120; i++) particles.push(new Particle());
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    
-                    // 连线更实，可见度更高
-                    if (dist < 150) {
-                        ctx.strokeStyle = `rgba(56, 189, 248, ${0.3 - dist/800})`; 
-                        ctx.lineWidth = 0.8; 
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                star.y -= star.speed;
+                if(star.y < 0) star.y = height;
+            });
             requestAnimationFrame(animate);
         }
+
+        window.addEventListener('resize', resize);
+        resize();
+        initStars();
         animate();
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
